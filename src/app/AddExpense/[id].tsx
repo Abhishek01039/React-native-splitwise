@@ -12,7 +12,6 @@ export default function AddExpense() {
   const { id } = useLocalSearchParams();
 
   useEffect(() => {
-    console.log("itemId:", id);
     onInit();
   }, []);
 
