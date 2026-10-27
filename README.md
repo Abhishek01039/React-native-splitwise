@@ -1,56 +1,140 @@
-# Welcome to your Expo app 👋
+<div align="center">
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+# 💸 ReactExpense
 
-## Get started
+**Track where your money goes — one swipe at a time.**
 
-1. Install dependencies
+A sleek, cross-platform expense tracker built with **Expo Router**, **React Native** and **TypeScript**.
+Runs on iOS, Android and the web from a single codebase.
 
-   ```bash
-   npm install
-   ```
+![Expo](https://img.shields.io/badge/Expo-SDK_57-000020?style=for-the-badge&logo=expo&logoColor=white)
+![React Native](https://img.shields.io/badge/React_Native-0.86-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![React](https://img.shields.io/badge/React-19.2-149ECA?style=for-the-badge&logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
-2. Start the app
+</div>
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## ✨ Features
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+| | Feature | What it does |
+|---|---|---|
+| 🏠 | **Recent Expenses** | The Home tab shows only what you've spent in the **last 7 days**. |
+| 📋 | **All Expenses** | A dedicated tab with your complete spending history. |
+| ➕ | **Quick Add** | Tap the **+** in the header to log a new expense with a title, amount and date. |
+| 👈 | **Swipe Actions** | Swipe any expense left to reveal **Edit** and **Delete**. |
+| ✏️ | **Edit in Place** | Editing reuses the same form, pre-filled with the expense's details. |
+| 📅 | **Native Date Picker** | Pick dates with the platform's own picker via `@expo/ui`. |
+| 🌗 | **Automatic Theme** | Follows the device's light/dark setting. |
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+---
 
-## Get a fresh project
+## 🧭 How it flows
 
-When you're ready, run:
-
-```bash
-npm run reset-project
+```mermaid
+flowchart LR
+    A[🏠 Home<br/>last 7 days] -- tap + --> C[📝 AddExpense/new]
+    B[📋 All Expenses] -- swipe → Edit --> D[📝 AddExpense/:id]
+    A -- swipe → Edit --> D
+    C -- save --> S[(ExpenseContext)]
+    D -- save --> S
+    A & B -- swipe → Delete --> S
+    S -. re-renders .-> A & B
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+All screens share a single source of truth: **`ExpenseContext`**, a React Context exposing
+`expenses`, `addExpense`, `updateExpense` and `deleteExpense`.
 
-### Other setup steps
+---
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## 🗂️ Project structure
 
-## Learn more
+```
+src/
+├── app/                          # Expo Router (file-based routing)
+│   ├── _layout.tsx               # Root Stack + GestureHandler + ExpenseProvider
+│   ├── (tabs)/
+│   │   ├── _layout.tsx           # Bottom tabs + "+" header button
+│   │   ├── index.tsx             # 🏠 Home — recent (7-day) expenses
+│   │   └── AllExpenses.tsx       # 📋 Full expense history
+│   └── AddExpense/
+│       └── [id].tsx              # 📝 Add (id = "new") or edit (id = expense id)
+├── component/
+│   └── ExpenseList.tsx           # FlatList + ReanimatedSwipeable rows
+├── Context/
+│   └── ExpenseContext.tsx        # Global expense state & actions
+├── model/
+│   └── ExpenseModel.tsx          # Expense interface
+└── global.css                    # Web font tokens
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+### 🧱 The data model
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```ts
+interface Expense {
+  id: string;
+  title: string;
+  amount: number;
+  date: Date;
+}
+```
 
-## Join the community
+---
 
-Join our community of developers creating universal apps.
+## 🚀 Getting started
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+**Prerequisites:** Node.js (LTS) and npm. For devices, install [Expo Go](https://expo.dev/go) or set up a simulator/emulator.
+
+```bash
+# 1. Install dependencies
+npm install
+
+# 2. Fire it up
+npx expo start
+```
+
+Then press **`i`** for iOS, **`a`** for Android, **`w`** for web — or scan the QR code with Expo Go.
+
+### 📜 Scripts
+
+| Command | Description |
+|---|---|
+| `npm start` | Start the Expo dev server |
+| `npm run ios` | Launch on the iOS simulator |
+| `npm run android` | Launch on an Android emulator/device |
+| `npm run web` | Run in the browser |
+| `npm run lint` | Lint with Expo's ESLint config |
+
+---
+
+## 🛠️ Tech stack
+
+- **[Expo SDK 57](https://docs.expo.dev/versions/v57.0.0/)** with the **React Compiler** and **typed routes** enabled
+- **[Expo Router](https://docs.expo.dev/router/introduction/)** — Stack + Tabs navigation
+- **[React Native Gesture Handler](https://docs.swmansion.com/react-native-gesture-handler/)** & **[Reanimated](https://docs.swmansion.com/react-native-reanimated/)** — buttery swipe rows
+- **[@expo/ui](https://docs.expo.dev/versions/v57.0.0/sdk/ui/)** — native date picker
+- **[FontAwesome Free Solid](https://github.com/oblador/react-native-vector-icons)** — tab and header icons
+
+---
+
+## 🗺️ Roadmap
+
+- [ ] 💾 Persist expenses across restarts (currently held in memory only)
+- [ ] 🏷️ Categories & filters
+- [ ] 📊 Spending totals and charts
+- [ ] ✅ Form validation for title and amount
+- [ ] 💱 Multi-currency support
+
+---
+
+## 📄 License
+
+Released under the [MIT License](./LICENSE).
+
+<div align="center">
+
+Made with ☕ and ⚛️
+
+</div>
